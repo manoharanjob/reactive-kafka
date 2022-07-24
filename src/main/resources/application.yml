@@ -1,0 +1,50 @@
+server:
+  port: 8085
+
+app:
+  kafka:
+    producer:
+      topic:
+        string: poems
+        avro: employee
+    consumer:
+      topic:
+        string: poems
+        avro: employee
+#SPRING PROPERTIES
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    security:
+      protocol: SSL
+    #properties:
+      #Server host name verification is disabled by setting ssl.endpoint.identification.algorithm to an empty string
+      #ssl.endpoint.identification.algorithm:
+    ssl:
+      protocol: SSL
+      trust-store-location: file:///opt/confluent-enterprise/confluent-6.1.1/ssl/kafka.app2.truststore.jks
+      trust-store-password: Manoi@3110
+      key-store-location: file:///opt/confluent-enterprise/confluent-6.1.1/ssl/kafka.app2.keystore.jks
+      key-store-password: Manoi@3110
+      key-password: Manoi@3110
+    producer:    
+      retries: 0
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: consumer-default
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false
+            value:
+              default:
+                type: com.example.kafka.dto.EmployeeDTO
+            trusted:
+              packages: "*"
